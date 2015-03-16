@@ -1,0 +1,3 @@
+Errors Noticed:
+1) Choosing 1945 Detroit Red Wings gives error with drawing
+2) Choosing any 1945 Teams gives error
