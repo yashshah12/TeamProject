@@ -96,6 +96,8 @@ sub findScore {
         
         my @goalsHome; 
         my @goalsAway;
+        my $totalGoalsHomeLeague;
+        my $totalGoalsAwayLeague;
         @goalsHome =  @{getGoalsOfTeams($homeTeam,$homeTeamYear)};
         @goalsAway = @{getGoalsOfTeams($visitorTeam,$visitorTeamYear)};
         
@@ -111,9 +113,48 @@ sub findScore {
                print $goalsAway[$j]."\n";
         }
         
+        #Finding out total goals scored in the league
+        $totalGoalsHomeLeague = totalGoalsInLeague($homeTeamYear);
+        print "Total Goals in the ".$homeTeamYear." league = ".$totalGoalsHomeLeague."\n";
+        $totalGoalsAwayLeague = totalGoalsInLeague($visitorTeamYear);
+        print "Total Goals in the ".$visitorTeamYear." league = ".$totalGoalsAwayLeague."\n";
+        
+        
+        
         
 }
-	
+sub totalGoalsInLeague() {
+         my ($year) = @_;
+         use Text::CSV;
+         my $csvLeague   = Text::CSV->new({ sep_char => ',' });
+     
+         my $totalGoals;
+       
+         my $leagueFName = "OtherData/".$year."/teams.csv";
+         print $leagueFName."\n";
+
+         open my $leagueFH, '<', $leagueFName
+                 or die "Unable to open leagues file: $leagueFName";     
+
+         my $leagueRecord = <$leagueFH>;
+         while ( $leagueRecord = <$leagueFH> ) {
+            chomp ( $leagueRecord );
+            if ( $csvLeague->parse($leagueRecord) ) {
+               my @leagueFields = $csvLeague->fields();
+                  $totalGoals+= $leagueFields[9];
+                  
+                  
+            } else {
+               warn "Line could not be parsed: $leagueRecord\n";
+            }
+         }
+
+         close ($leagueFH);
+         return $totalGoals;
+   
+}
+
+
 sub chooseTeamFromYear {
 	my ($year) = @_;
 	use Text::CSV;
