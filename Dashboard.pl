@@ -79,6 +79,7 @@ sub ResearchSpecificYear{
 	my $teamChoice;
 	my $userChoice = 0;	
 	my $year;
+	
 	my $i = 0;
 	#
 	#Asking user for a year. Add error checking to this like above code. Loop until a year in the appropriate ranges is given
@@ -103,6 +104,7 @@ sub ResearchSpecificYear{
 	      my @teamFields = $csvTeams->fields();
 	      #Store the team name and put it into teams array
 	      $teams[$i] = $teamFields[1];
+	     
 	      #Encoding the teams with a number so user does not have to type the whole name. Ex. Montreal Canadiens (1). 
 	      print $teams[$i]."(".($i+1).")\n";
 
@@ -320,6 +322,7 @@ sub Stats {
 	my $gamesWon;
 	my $gamesLoss;
 	my $gamesTied;
+	my $teamCode;
 	
 	#Creating the path name so we can open the teams.csv for a particular year in the subfolder, OtherData
 	my $teamsFName   = "OtherData/".$year."/teams.csv";
@@ -336,12 +339,14 @@ sub Stats {
 			$currentTeam = $teamFields[1];
 			#Match the team you parsed with the team the user choice, if its a match, then parse other information
 			if($currentTeam eq $teamName) {
+				$teamCode = $teamFields[2];
 				$gamesPlayed = $teamFields[3];
 				$gamesWon = $teamFields[4];
 				$gamesLoss = $teamFields[5];
 				$gamesTied = $teamFields[6];
 				$goalsScoredFor = $teamFields[9];
 				$goalsScoredAgainst = $teamFields[10];
+				
 		      }
 		} else {
 		      warn "Line/record could not be parsed: $teamRecord\n";
@@ -398,6 +403,44 @@ sub Stats {
 
 	$R->stop();
 	
+	#goalieGraph($teamCode,$year,$teamName);
 	#Ask the first question again, this call should be made after we displayed all information needed
 	makeChoice();
 }
+# sub goalieGraph {
+	# #Receieve parameters
+	# my ($teamCode,$year,$teamName) = @_;
+	# #Initilizing the module to read CSV
+	# use Text::CSV;
+	# my $csvTeams   = Text::CSV->new({ sep_char => ',' });
+	
+	# my $currentTeam;
+	# my $goalieName;
+	# my $gamesPlayed;
+	# my $wins;
+	# my $loses;
+	# my $goalsAgainst;
+	# my $shotsAgainst;
+	# my $saves;
+	
+	# #Creating the path name so we can open the teams.csv for a particular year in the subfolder, OtherData
+	# my $teamsFName   = "OtherData/".$year."/goalies.csv";
+	# print $teamsFName."\n";
+	
+	# close ($teamsFH);
+	
+	# # #writting to a file
+	# # #Get rid of the third column "Performance";
+	# # my $outputFName = "DashboardGoalieStats-".$teamName."-".$goalieName."-".$year.".csv";
+	# # print $outputFName."\n";
+	# # open my $outputFH, '>', $outputFName;
+	# # print $outputFH "Stats".","."Result".","."Performance"."\n";
+	# # print $outputFH "1.Games Played".",".$gamesPlayed.","."wins"."\n";
+	# # print $outputFH "2.Wins".",".$wins.","."wins"."\n";
+	# # print $outputFH "3.Loss".",".$loses.","."wins"."\n";
+	# # print $outputFH "4.Goals Against".",".$goalsAgainst.","."wins"."\n";
+	# # print $outputFH "5.Shots Against".",".$shotsAgainst.","."wins"."\n";
+	# # print $outputFH "6.Goals Saves".",".$saves.","."wins"."\n";
+
+	# # close($outputFH);
+# }

@@ -1,3 +1,6 @@
 Errors Noticed:
 1) Choosing 1945 Detroit Red Wings gives error with drawing
 2) Choosing any 1945 Teams gives error
+
+Also, in OtherData folder, from 1999-2003, in the teams.csv, the goals scored for are in percentage
+	- find the actual goals scored for and change those appropriate csv files with the right data
