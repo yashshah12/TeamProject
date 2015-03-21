@@ -96,40 +96,98 @@ sub findScore {
         
         my @goalsHome; 
         my @goalsAway;
+        my $avgGoalsScoredForHome;
+        my $avgGoalsScoredForAway;
+        my $avgGoalsScoredAgainstHome;
+        my $avgGoalsScoredAgainstAway;
+        
+        #METRICS VARIABLES
+        my $metricGoalsForA;
+        my $metricGoalsAgainstA;
+        my $metricGoalsForB;
+        my $metricGoalsAgainstB;
+        my $metricTotalA;
+        my $metricTotalB;
+        
+        my $totalHomeGoals;
+        my $totalVisitorGoals;
         my $totalGoalsHomeLeague;
         my $totalGoalsAwayLeague;
-        @goalsHome =  @{getGoalsOfTeams($homeTeam,$homeTeamYear)};
-        @goalsAway = @{getGoalsOfTeams($visitorTeam,$visitorTeamYear)};
+
         
-        #printing out goals for home team
-        print $homeTeamYear."-".$homeTeam." Goals\n";
-        for (my $j = 0; $j<=$#goalsHome ;$j++) {
-               print $goalsHome[$j]."\n";
-        }
+        # @goalsHome =  @{getGoalsOfTeams($homeTeam,$homeTeamYear)};
+        # @goalsAway = @{getGoalsOfTeams($visitorTeam,$visitorTeamYear)};
         
-        #printing out goals for away team
-        print $visitorTeamYear."-".$visitorTeam." Goals\n";
-        for (my $j = 0; $j<=$#goalsAway ;$j++) {
-               print $goalsAway[$j]."\n";
-        }
+        # #printing out goals for home team
+        # print $homeTeamYear."-".$homeTeam." Goals\n";
+        # for (my $j = 0; $j<=$#goalsHome ;$j++) {
+               # print $goalsHome[$j]."\n";
+               # $totalHomeGoals+=$goalsHome[$j];
+        # }
+        # print $homeTeamYear."-".$homeTeam." Total Goals: ".$totalHomeGoals."\n";
         
-        #Finding out total goals scored in the league
-        $totalGoalsHomeLeague = totalGoalsInLeague($homeTeamYear);
-        print "Total Goals in the ".$homeTeamYear." league = ".$totalGoalsHomeLeague."\n";
-        $totalGoalsAwayLeague = totalGoalsInLeague($visitorTeamYear);
-        print "Total Goals in the ".$visitorTeamYear." league = ".$totalGoalsAwayLeague."\n";
+        # #printing out goals for away team
+        # print $visitorTeamYear."-".$visitorTeam." Goals\n";
+        # for (my $j = 0; $j<=$#goalsAway ;$j++) {
+               # print $goalsAway[$j]."\n";
+               # $totalVisitorGoals+=$goalsAway[$j];
+        # }
+        # print $visitorTeamYear."-".$visitorTeam." Total Goals: ".$totalVisitorGoals."\n";
+        
+        @goalsHome = @{getGoalsForAgainst($homeTeam,$homeTeamYear)};
+        @goalsAway = @{getGoalsForAgainst($visitorTeam,$visitorTeamYear)};
+        print $homeTeamYear."-".$homeTeam." Total Goals Scored For: ".$goalsHome[0]."\n";
+        print $homeTeamYear."-".$homeTeam." Total Goals Scored Against: ".$goalsHome[1]."\n";
+        print "Average Goals Scored for  in the ".$homeTeamYear." league = ".$goalsHome[2]."\n";
+
+        print $visitorTeamYear."-".$visitorTeam." Total Goals Scored For: ".$goalsAway[0]."\n";
+        print $visitorTeamYear."-".$visitorTeam." Total Goals Scored Against: ".$goalsAway[1]."\n";
+        print "Average Goals Scored for in the ".$visitorTeamYear." league = ".$goalsAway[2]."\n";
+        
+        
+       $avgGoalsScoredForHome = $goalsHome[0] / $goalsHome[2];
+       # print $avgGoalsScoredForHome;
+       $avgGoalsScoredAgainstHome = $goalsHome[1] / $goalsHome[2];
+       # print $avgGoalsScoredAgainstHome;
+       $avgGoalsScoredForAway = $goalsHome[0] / $goalsHome[2];
+       # print $avgGoalsScoredForAway;
+       $avgGoalsScoredAgainstAway = $goalsHome[1] / $goalsHome[2];
+       # print $avgGoalsScoredAgainstAway;
+
+        print "----METRICS----\n";
+        $metricGoalsForA = $avgGoalsScoredForHome / $avgGoalsScoredForAway; #its not dividing properly
+        $metricGoalsAgainstA = $avgGoalsScoredAgainstHome / $avgGoalsScoredAgainstAway;
+        #Since the greater the metricGoalsAgainstA, the worst, so divide $metricGoalsAgainstA by 0.50
+        $metricGoalsAgainstA = 0.50 / $metricGoalsAgainstA;
+         
+        print "Goals Scored For A: ".$metricGoalsForA."\n";
+        print "Goals Scored Against A: ".$metricGoalsAgainstA."\n";
+        
+        $metricGoalsForB = $avgGoalsScoredForAway / $avgGoalsScoredForHome;
+        $metricGoalsAgainstB = $avgGoalsScoredAgainstAway / $avgGoalsScoredAgainstHome;
+        #Since the greater the metricGoalsAgainstA, the worst, so divide $metricGoalsAgainstA by 0.50
+        $metricGoalsAgainstB = 0.50 / $metricGoalsAgainstB;
+        print "Goals Scored For B: ".$metricGoalsForB."\n";
+        print "Goals Scored Against B: ".$metricGoalsAgainstB."\n";
+        
+        $metricTotalA = $metricGoalsForA + $metricGoalsAgainstA;
+        $metricTotalB = $metricGoalsForB + $metricGoalsAgainstB;
+        print "Total Metrics Multiplier A: ".$metricTotalA."\n";
+        print "Total Metrics Multiplier B: ".$metricTotalB."\n";
         
         
         
         
 }
-sub totalGoalsInLeague() {
+
+sub AverageGoalsInLeague {
          my ($year) = @_;
          use Text::CSV;
          my $csvLeague   = Text::CSV->new({ sep_char => ',' });
      
          my $totalGoals;
-       
+         my $totalTeams;
+         my $AverageGoals;
          my $leagueFName = "OtherData/".$year."/teams.csv";
          print $leagueFName."\n";
 
@@ -141,6 +199,7 @@ sub totalGoalsInLeague() {
             chomp ( $leagueRecord );
             if ( $csvLeague->parse($leagueRecord) ) {
                my @leagueFields = $csvLeague->fields();
+                  $totalTeams = $leagueFields[0];
                   $totalGoals+= $leagueFields[9];
                   
                   
@@ -148,9 +207,10 @@ sub totalGoalsInLeague() {
                warn "Line could not be parsed: $leagueRecord\n";
             }
          }
-
+         
          close ($leagueFH);
-         return $totalGoals;
+         $AverageGoals = $totalGoals/$totalTeams;
+         return $AverageGoals;
    
 }
 
@@ -200,6 +260,50 @@ sub chooseTeamFromYear {
 
 	return $teamChoice;
 	
+}
+sub getGoalsForAgainst{
+         my ($team, $year) = @_;
+         use Text::CSV;
+         my $csvLeague   = Text::CSV->new({ sep_char => ',' });
+         my $goalsScoredFor;
+         my $goalsScoredAgainst;
+         my $totalGoals;
+         my $totalTeams;
+         my $AverageGoals;
+         my @goals;
+         my $i = 0;
+         my $currentTeam;
+         my $leagueFName = "OtherData/".$year."/teams.csv";
+         print $leagueFName."\n";
+
+         open my $leagueFH, '<', $leagueFName
+                 or die "Unable to open leagues file: $leagueFName";     
+
+         my $leagueRecord = <$leagueFH>;
+         while ( $leagueRecord = <$leagueFH> ) {
+            chomp ( $leagueRecord );
+            if ( $csvLeague->parse($leagueRecord) ) {
+               my @leagueFields = $csvLeague->fields();
+               $currentTeam = $leagueFields[1];
+               $totalTeams = $leagueFields[0];
+               $totalGoals+= $leagueFields[9];
+               if ($currentTeam eq $team) {
+                  $goalsScoredFor = $leagueFields[9];
+                  $goalsScoredAgainst = $leagueFields[10];
+                                                     
+               }
+               
+            } else {
+               warn "Line could not be parsed: $leagueRecord\n";
+            }
+         }
+         close ($leagueFH);
+         $AverageGoals = $totalGoals/$totalTeams;
+         $goals[0] = $goalsScoredFor;
+         $goals[1] = $goalsScoredAgainst;
+         $goals[2] = $AverageGoals;
+         return \@goals;
+   
 }
 
 sub getGoalsOfTeams {
