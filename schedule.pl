@@ -1,11 +1,12 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
+my $numOfTeams = 3;
+my $numOfGames = 3;
 
 my @teamsGame;
 my @gamesSchedule;
-my $numOfTeams = 5;
-my $numOfGames = 3;
+
 my $totalGames;
 my @currentTeamGames;
 $teamsGame[0][0] = "Montreal Canadians";
@@ -15,10 +16,10 @@ $teamsGame[1][1] = 1922;
 $teamsGame[2][0] = "Ottawa Senators";
 $teamsGame[2][1] = 1922;
 
-
-
-
-$totalGames =($numOfTeams*$numOfGames)/2 + 0.5;
+$totalGames =($numOfTeams*$numOfGames)/2;
+if ($totalGames%2!=0) {
+	 $totalGames = $totalGames+ 0.5;
+}
 
 print "total games to be played in the season is: ".$totalGames."\n";
 
@@ -40,7 +41,6 @@ for ($i = 0;$i<$totalCurrentGames;$i++) {
 }
 print $totalCurrentGames."\n";
 $i = 0;
-my $currentTeam1;
 my $currentTeam1;
 
 my $gamesPlayedByTeam1 = 0;
@@ -78,6 +78,13 @@ for ($i = 1;$i<=$numOfTeams;$i++) {
 	}
 }
 
+my $t1;
+my $t2;
 for ($i = 0;$i<$totalCurrentGames-1;$i++) {
-	print $gamesSchedule[$i][0]."v".$gamesSchedule[$i][1]."\n";
+	$t1 = $gamesSchedule[$i][0];
+	$t2 = $gamesSchedule[$i][1];
+	 print $gamesSchedule[$i][0]."v".$gamesSchedule[$i][1]."\n";
+	print $teamsGame[$t1-1][1]." ".$teamsGame[$t1-1][0]."VS".$teamsGame[$t2-1][1]." ".$teamsGame[$t2-1][0]."\n";
+	# $teamsGame[0][0]
 }
+print $#gamesSchedule."VS".$totalCurrentGames."\n";
