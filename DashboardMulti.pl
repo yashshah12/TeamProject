@@ -243,6 +243,7 @@ sub ResearchRangeYear{
 
 	    $teamChoice = $teams[$userChoice-1];
 	    # printf $teamChoice."\n";
+	    #Creating Multi Goal Differential;
 	    my $isSuccess;
 		$j = 0;
         	for ($currentYear= $yearStart;$currentYear<=$yearEnd;$currentYear++) {
@@ -250,7 +251,7 @@ sub ResearchRangeYear{
 			 #Caling this function to create the first chart of goal differntial. 
 			$isSuccess = GoalDifferential($teamChoice, $currentYear);
 			if($isSuccess==1) {
-				print "Successfully created the".$currentYear."csv\n";
+				print "Successfully created the goal differential".$currentYear."csv\n";
 				$arrayMultiPlotInfo[$j] = "DashboardGoalDifferential-".$currentYear.$teamChoice.".csv";
 				print $arrayMultiPlotInfo[$j]."\n";
 				$j++;
@@ -260,8 +261,28 @@ sub ResearchRangeYear{
 		}
 		
 		#create multi goal diff plots
-		hockeyMultiplot(@arrayMultiPlotInfo);
-	
+		hockeyMultiplot(@arrayMultiPlotInfo,$yearStart,$currentYear,$teamChoice,"GoalDifferential");
+		@arrayMultiPlotInfo = ();
+	    #Creating Multi Stats;
+	     $isSuccess = 0;
+		$j = 0;
+        	for ($currentYear= $yearStart;$currentYear<=$yearEnd;$currentYear++) {
+        		
+			 #Caling this function to create the first chart of goal differntial. 
+			$isSuccess = Stats($teamChoice, $currentYear);
+			if($isSuccess==1) {
+				print "Successfully created the stats".$currentYear."csv\n";
+				$arrayMultiPlotInfo[$j] = "DashboardStats-".$currentYear.$teamChoice.".csv";
+				print $arrayMultiPlotInfo[$j]."\n";
+				$j++;
+			} else {
+				last;
+			}
+		}
+		
+		#create multi goal diff plots
+		hockeyMultiplot(@arrayMultiPlotInfo,$yearStart,$currentYear,$teamChoice,"Stats");
+		
 	
         
         
@@ -454,7 +475,7 @@ sub Stats {
 	#Initilizing the module to read CSV
 	use Text::CSV;
 	my $csvTeams   = Text::CSV->new({ sep_char => ',' });
-		
+	my $toPlot = 0;
 	#print $teamName."\n";
 	#print $year."\n";
 	my $currentTeam;
@@ -485,6 +506,7 @@ sub Stats {
 			$currentTeam = $teamFields[1];
 			#Match the team you parsed with the team the user choice, if its a match, then parse other information
 			if($currentTeam eq $teamName) {
+				$toPlot = 1;
 				$teamCode = $teamFields[2];
 				$gamesPlayed = $teamFields[3];
 				$gamesWon = $teamFields[4];
@@ -500,10 +522,12 @@ sub Stats {
 	}
 	
 	close ($teamsFH);
-		
+	if ($toPlot==0) {
+		return 0 ;
+	}
 	#writting to a file
 	#Get rid of the third column "Performance";
-	my $outputFName = "DashboardStats-".$teamName."-".$year.".csv";
+	my $outputFName = "DashboardStats-".$year.$teamName.".csv";
 	print $outputFName."\n";
 	open my $outputFH, '>', $outputFName;
 	print $outputFH "Stats".","."Result".","."Performance"."\n";
@@ -523,7 +547,7 @@ sub Stats {
 	my $R = Statistics::R->new();
 
 	# Name the PDF output file for the plot  
-	my $Rplots_file = "DashboardStats-".$teamName."-".$year.".pdf";
+	my $Rplots_file = "DashboardStats-".$year.$teamName.".pdf";
 
 	# Set up the PDF file for plots
 	$R->run(qq`pdf("$Rplots_file" , paper="letter")`);
@@ -548,11 +572,13 @@ sub Stats {
 
 	$R->stop();
 	
+	return 1;
+	
 	
 
 }
 sub hockeyMultiplot {
-	my (@multiPlotInfo) = @_;
+	my (@multiPlotInfo,$yearStart,$yearEnd,$teamChoice,$graphType) = @_;
 #
 #  Use the R Perl module for the ggplot2 graphics
 #
@@ -601,7 +627,7 @@ print $count."\n";
 # for ( my $i=0; $i<$count; $i++ ) {
    # $in_file[$i]  = $multiPlotInfo[$i];
 # }
-my $out_file  = "MultiGoalDifferential.pdf";
+my $out_file  = "Multi".$graphType.": ".$teamChoice.$yearStart."-".$yearEnd.".pdf";
 my $cols      = 2;
 
 my $title = "";
