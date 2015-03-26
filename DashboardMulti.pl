@@ -261,7 +261,7 @@ sub ResearchRangeYear{
 		}
 		
 		#create multi goal diff plots
-		hockeyMultiplot(@arrayMultiPlotInfo,$yearStart,$currentYear,$teamChoice,"GoalDifferential");
+		hockeyMultiplotGoalDiff($yearStart,$currentYear,$teamChoice,@arrayMultiPlotInfo);
 		@arrayMultiPlotInfo = ();
 	    #Creating Multi Stats;
 	     $isSuccess = 0;
@@ -281,7 +281,7 @@ sub ResearchRangeYear{
 		}
 		
 		#create multi goal diff plots
-		hockeyMultiplot(@arrayMultiPlotInfo,$yearStart,$currentYear,$teamChoice,"Stats");
+		hockeyMultiplotStats($yearStart,$currentYear,$teamChoice,@arrayMultiPlotInfo);
 		
 	
         
@@ -577,8 +577,8 @@ sub Stats {
 	
 
 }
-sub hockeyMultiplot {
-	my (@multiPlotInfo,$yearStart,$yearEnd,$teamChoice,$graphType) = @_;
+sub hockeyMultiplotGoalDiff {
+	my ($yearStart,$yearEnd,$teamChoice,@multiPlotInfo) = @_;
 #
 #  Use the R Perl module for the ggplot2 graphics
 #
@@ -627,7 +627,7 @@ print $count."\n";
 # for ( my $i=0; $i<$count; $i++ ) {
    # $in_file[$i]  = $multiPlotInfo[$i];
 # }
-my $out_file  = "Multi".$graphType.": ".$teamChoice.$yearStart."-".$yearEnd.".pdf";
+my $out_file  = "MultiGoalDifferential ".$teamChoice.$yearStart."-".$yearEnd.".pdf";
 my $cols      = 2;
 
 my $title = "";
@@ -664,6 +664,122 @@ for ( my $i=1; $i<=$count; $i++ ) {
    $R->run(qq`p$i <- ggplot(data, aes(x=Game, y=Differential)) + 
    geom_bar(aes(fill=Performance),stat="identity",binwidth=2) + 
    ggtitle("$title") + ylab("Goal Differential") + xlab("Games") + 
+
+   theme(axis.title.x=element_text(size=$size)) +
+   theme(axis.title.y=element_text(size=$size)) +
+   theme(plot.title  =element_text(face="bold",size=$size)) + 
+
+   scale_fill_manual(values=c("red", "blue")) + 
+
+   theme(legend.position="none") +
+
+   theme(axis.text.x=element_text(angle=50, size=10, vjust=0.5)) `);
+
+   $string = $string."p".$i.",";
+}
+
+$string = $string."cols=".$cols.")";
+print "string = ".$string."and size = ".$size."\n";
+
+$R->run(qq`$string`);
+
+# Close down the PDF device
+$R->run(q`dev.off()`);
+
+$R->stop();
+
+#
+#  End of the script
+#
+}
+
+sub hockeyMultiplotStats {
+	my ($yearStart,$yearEnd,$teamChoice,@multiPlotInfo) = @_;
+#
+#  Use the R Perl module for the ggplot2 graphics
+#
+
+use Statistics::R;
+
+#
+#  Use the multiplot R function to plot multiple plots 
+#  on one page
+
+require 'multiplotR.pl';
+
+#
+#  hockeyMultiplot.pl
+#  Author: Deborah Stacey
+#  Date of Last Update: Monday, February 16, 2015
+#  Synopsis: plot multiple R (ggplot2) plots on one PDF page
+#
+
+# my $teamName = $multiPlotInfo[$#multiPlotInfo-2];
+# my $startYear = $multiPlotInfo[$#multiPlotInfo-1];
+# my $endYear = $multiPlotInfo[$#multiPlotInfo];
+
+# print $teamName;
+# print $startYear;
+# print $endYear;
+#this works
+ my @in_file;
+# $in_file[0] = $multiPlotInfo[0];
+# $in_file[1] = $multiPlotInfo[1];
+# $in_file[2] = $multiPlotInfo[2];
+# $in_file[3] = $multiPlotInfo[3];
+# my $count = 4;
+#
+my $k = 0;
+print "".($#multiPlotInfo)."\n";
+my $count;
+for ($k = 0;$k<=$#multiPlotInfo;$k++) {
+	$in_file[$k]= $multiPlotInfo[$k];
+	
+}	
+$count = $k;
+print $count."\n";
+
+# my $count = $#multiPlotInfo - 3;
+# for ( my $i=0; $i<$count; $i++ ) {
+   # $in_file[$i]  = $multiPlotInfo[$i];
+# }
+my $out_file  = "MultiGoalDifferential ".$teamChoice.$yearStart."-".$yearEnd.".pdf";
+my $cols      = 2;
+
+my $title = "";
+
+# Create a communication bridge with R and start R
+my $R = Statistics::R->new();
+
+# Name the PDF output file for the plot  
+my $Rplots_file = $out_file;
+
+# Set up the PDF file for plots
+$R->run(qq`pdf("$Rplots_file" , paper="letter")`);
+
+# Load the plotting library
+$R->run(q`library(ggplot2)`);
+
+#
+# Include the multiplotR definition
+#
+$R = multiplotR($R);
+my $string = "multiplot(";
+my $j = 0;
+
+my $size  = 15 - (($cols-1) * 5);
+
+for ( my $i=1; $i<=$count; $i++ ) {
+#
+#  Create plot
+#
+   $j = $i - 1;
+   $R->run(qq`data <- read.csv("$in_file[$j]")`);
+   $title = "$in_file[$j]";
+
+   $R->run(qq`p$i <- ggplot(data, aes(x=Stats, y=Result)) + 
+   geom_bar(aes(fill=Performance),stat="identity",binwidth=2) + 
+   ggtitle("$title") + ylab("Results") + xlab("Statistics") + 
 
    theme(axis.title.x=element_text(size=$size)) +
    theme(axis.title.y=element_text(size=$size)) +
