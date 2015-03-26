@@ -744,7 +744,7 @@ print $count."\n";
    # $in_file[$i]  = $multiPlotInfo[$i];
 # }
 my $out_file  = "MultiStats ".$teamChoice.$yearStart."-".$yearEnd.".pdf";
-my $cols      = 2;
+my $cols      = 1;
 
 my $title = "";
 
