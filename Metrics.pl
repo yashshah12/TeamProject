@@ -199,7 +199,7 @@ sub findScore {
 
         print "----METRICS----\n";
         $metricGoalsForA = $avgGoalsScoredForHome / $avgGoalsScoredForAway; #its not dividing properly
-        print ($avgGoalsScoredForHome / $avgGoalsScoredForAway)."\n";
+        print ($avgGoalsScoredForHome / $avgGoalsScoredForAway);
         $metricGoalsAgainstA = $avgGoalsScoredAgainstHome / $avgGoalsScoredAgainstAway;
         #Since the greater the metricGoalsAgainstA, the worst, so divide $metricGoalsAgainstA by 0.50
         $metricGoalsAgainstA = 0.5 / $metricGoalsAgainstA;
