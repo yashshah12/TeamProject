@@ -743,7 +743,7 @@ print $count."\n";
 # for ( my $i=0; $i<$count; $i++ ) {
    # $in_file[$i]  = $multiPlotInfo[$i];
 # }
-my $out_file  = "MultiGoalDifferential ".$teamChoice.$yearStart."-".$yearEnd.".pdf";
+my $out_file  = "MultiStats ".$teamChoice.$yearStart."-".$yearEnd.".pdf";
 my $cols      = 2;
 
 my $title = "";
