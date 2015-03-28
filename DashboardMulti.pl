@@ -101,8 +101,10 @@ sub ResearchSpecificYear{
 	#
 	#Asking user for a year. Add error checking to this like above code. Loop until a year in the appropriate ranges is given
 	#
-	print "What year will you like to choose (Ex. 1920 not 1920-1921)";
+	do {
+	print "What year will you like to choose (Ex. 1920 not 1920-1921. Enter from 1917-2014)";
 	chomp ($year = <>);
+	} while($year<1917 || $year>2014);
 	
 	#Creating the path name to opening the teams.csv for a particular year in the sub folder, OtherData
 	my $teamsFName   = "OtherData/".$year."/teams.csv";
@@ -152,6 +154,7 @@ sub ResearchSpecificYear{
 	#This function will collect other information on that team such as games played, wins, losses, goalsscoredfor, goalsscoredagainst
 	#Pass the team name and the year to the function
 	Stats($teamChoice, $year);
+	makeChoice();
 }
 
 #
@@ -191,10 +194,14 @@ sub ResearchRangeYear{
         #Created by Nick and Evan
         while($valid == 0)
         {
+	do {
 	print "What year will you like to start at (Ex. 1920 not 1920-1921)";
 	chomp ($yearStart = <>);
+	} while($yearStart<1917 || $yearStart>2014);
+	do {
         print "What year will you like to end at (Ex. 1922 not 1922-1923)";
 	chomp ($yearEnd = <>);
+	} while($yearEnd<1917 || $yearEnd>2014);
         
         $valid = 1;
 
@@ -745,8 +752,9 @@ sub hockeyMultiplotStats {
 	$R = multiplotR($R);
 	my $string = "multiplot(";
 	my $j = 0;
-
-	my $size  = 15 - (($cols-1) * 5);
+	
+	my $size = 9;
+	# my $size  = 15 - (($cols-1) * 5);
 
 	for ( my $i=1; $i<=$count; $i++ ) {
 	#
@@ -768,7 +776,7 @@ sub hockeyMultiplotStats {
 
 	   theme(legend.position="none") +
 
-	   theme(axis.text.x=element_text(angle=50, size=10, vjust=0.5)) `);
+	   theme(axis.text.x=element_text(angle=50, size=5, vjust=0.5)) `);
 
 	   $string = $string."p".$i.",";
 	}

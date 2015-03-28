@@ -28,9 +28,10 @@ sub startMetrics{
 	my $visitorTeamYear;
 	my @finalScores;                                                
 	                                                     
-	
+	do {
 	print "What year will you like to choose (Ex. 1920 not 1920-1921)\n";
 	chomp ($teamYear = <>);
+	} while($teamYear<1917 || $teamYear>2014);
 	$teamName = chooseTeamFromYear($teamYear);
 	
 	$teamsGame[0][0] = $teamName;
@@ -43,8 +44,10 @@ sub startMetrics{
 	$numTeams+=$numOpponents;
 	print $numOpponents."\n";
 	for ($i = 1;$i<=$numOpponents;$i++) {
+               do {
 		print "Opponent:".$i."- What year will you like to choose (Ex. 1920 not 1920-1921)\n";
 		chomp ($year = <>);
+                } while($year<1917 || $year>2014);
 		$teamsGame[$i][0] = chooseTeamFromYear($year);
 		$teamsGame[$i][1] = $year;
 		# print "Opponent ".$i.":".$teamsGame[$i][1]."-".$teamsGame[$i][0]."\n";
