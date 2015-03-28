@@ -104,7 +104,7 @@ sub ResearchSpecificYear{
 	do {
 	print "What year will you like to choose (Ex. 1920 not 1920-1921. Enter from 1917-2014)";
 	chomp ($year = <>);
-	} while($year<1917 || $year>2014);
+	} while($year<1917 || $year>2014 || $year==2004);
 	
 	#Creating the path name to opening the teams.csv for a particular year in the sub folder, OtherData
 	my $teamsFName   = "OtherData/".$year."/teams.csv";
@@ -197,11 +197,11 @@ sub ResearchRangeYear{
 	do {
 	print "What year will you like to start at (Ex. 1920 not 1920-1921)";
 	chomp ($yearStart = <>);
-	} while($yearStart<1917 || $yearStart>2014);
+	} while($yearStart<1917 || $yearStart>2014 || $yearStart==2004);
 	do {
         print "What year will you like to end at (Ex. 1922 not 1922-1923)";
 	chomp ($yearEnd = <>);
-	} while($yearEnd<1917 || $yearEnd>2014);
+	} while($yearEnd<1917 || $yearEnd>2014 || $yearEnd==2004);
         
         $valid = 1;
 
