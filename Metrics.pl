@@ -1,8 +1,11 @@
 #!/usr/bin/perl
-use strict;
-use warnings;
 
-
+return true;
+#
+#Created by Yash Shah
+#This is the File for Let Play Part
+#
+sub startMetrics{ 
 	use Text::CSV;
 	my $csvTeams   = Text::CSV->new({ sep_char => ',' });
 	my @teamsGame; #A 2d Array that will store all the teamname and the years
@@ -38,7 +41,7 @@ use warnings;
 	print "How many teams do you want to face again\n";
 	chomp ($numOpponents = <>);
 	$numTeams+=$numOpponents;
-	print $numOpponents;
+	print $numOpponents."\n";
 	for ($i = 1;$i<=$numOpponents;$i++) {
 		print "Opponent:".$i."- What year will you like to choose (Ex. 1920 not 1920-1921)\n";
 		chomp ($year = <>);
@@ -54,29 +57,21 @@ use warnings;
 	print "How many games do you want to play:\n";
 	chomp ($gamesToPlay = <>);
 	print "Games In Season: ".$gamesToPlay."\n";
-        print "Total teams: ".$numTeams."\n"; #Total teams in the fantasy league
+        # print "Total teams: ".$numTeams."\n"; #Total teams in the fantasy league
 	
-      #-----SCHEDULE--------
-         # my @teamsGame;
-         # my @gamesSchedule;
+         #-----SCHEDULE--------
 
          my $totalGames;
          my @currentTeamGames;
-         # $teamsGame[0][0] = "Montreal Canadians";
-         # $teamsGame[0][1] = 1922;
-         # $teamsGame[1][0] = "Hamilton Tigers";
-         # $teamsGame[1][1] = 1922;
-         # $teamsGame[2][0] = "Ottawa Senators";
-         # $teamsGame[2][1] = 1922;
 
          $totalGames =($numTeams*$gamesToPlay)/2;
          if ($totalGames%2!=0) {
                   $totalGames = $totalGames+ 0.5;
          }
 
-         print "total games to be played in the season is: ".$totalGames."\n";
+         # print "total games to be played in the season is: ".$totalGames."\n";
 
-         my $i = 0;
+         $i = 0;
          my $j = 0;
          my $totalCurrentGames = 0;
          #loop through each team
@@ -89,10 +84,10 @@ use warnings;
                  
          }
 
-         for ($i = 0;$i<$totalCurrentGames;$i++) {
-                 print $gamesSchedule[$i][0]."v".$gamesSchedule[$i][1]."\n";
-         }
-         print $totalCurrentGames."\n";
+         # for ($i = 0;$i<$totalCurrentGames;$i++) {
+                 # print $gamesSchedule[$i][0]."v".$gamesSchedule[$i][1]."\n";
+         # }
+         # print $totalCurrentGames."\n";
          $i = 0;
          my $currentTeam1;
 
@@ -105,16 +100,15 @@ use warnings;
                                  
                          }
                  }
-                 print "team ".$i." played ".$currentTeamGames[$i]."\n";
+                 # print "team ".$i." played ".$currentTeamGames[$i]."\n";
                  
          }
          my $gamesRequired;
          my $team1;
-         my $randTeam2;
          for ($i = 1;$i<=$numTeams;$i++) {
                  if($currentTeamGames[$i] < $gamesToPlay) {
                          $gamesRequired = $gamesToPlay - $currentTeamGames[$i];
-                         print "Games Required for team: ".$i." is ".$gamesRequired."\n";
+                         # print "Games Required for team: ".$i." is ".$gamesRequired."\n";
                          for ($j = 1; $j<=$gamesRequired; $j++) {
                                  $team1 = $i;
                                  $randTeam2 = int(rand($numTeams)) + 1; #Choose a random team between 1 and the number of teams we have
@@ -126,45 +120,26 @@ use warnings;
                                  $gamesSchedule[$totalCurrentGames-1][1] = $randTeam2;
                                  $totalCurrentGames++;
                                  $currentTeamGames[$i]++;
-                                 # print $randTeam1." - ".$randTeam2."\n";
+                               
                          }
                  }
          }
-
+         print "---Schedule---\n";
          my $t1;
          my $t2;
          for ($i = 0;$i<$totalCurrentGames-1;$i++) {
                  $t1 = $gamesSchedule[$i][0];
                  $t2 = $gamesSchedule[$i][1];
-                  print $gamesSchedule[$i][0]."v".$gamesSchedule[$i][1]."\n";
-                 print $teamsGame[$t1-1][1]." ".$teamsGame[$t1-1][0]."VS".$teamsGame[$t2-1][1]." ".$teamsGame[$t2-1][0]."\n";
+                  # print $gamesSchedule[$i][0]."v".$gamesSchedule[$i][1]."\n";
+                 print $teamsGame[$t1-1][1]." ".$teamsGame[$t1-1][0]." VS ".$teamsGame[$t2-1][1]." ".$teamsGame[$t2-1][0]."\n";
                  # $teamsGame[0][0]
          }
-         print $#gamesSchedule."VS".$totalCurrentGames."\n";
-	# #Make a random schdule
-	# for ($i = 1; $i<=$gamesToPlay; $i++) {
-		# $randTeam1 = int(rand($numTeams)) + 1; #Choose a random team between 1 and the number of teams we have
-                # $randTeam2 = int(rand($numTeams)) + 1; #Choose a random team between 1 and the number of teams we have
-		# while ($randTeam1 ==$randTeam2) {
-			# $randTeam1 = int(rand($numTeams)) + 1; #Choose a random team between 1 and the number of teams we have
-                        # $randTeam2 = int(rand($numTeams)) + 1; #Choose a random team between 1 and the number of teams we have
-		# }
-		# $gamesSchedule[$i-1][0] = $randTeam1;
-		# $gamesSchedule[$i-1][1] = $randTeam2;
-                # # print $randTeam1." - ".$randTeam2."\n";
-	# }
-	
-	
-	
-	# for ($i = 0;$i<=$#gamesSchedule;$i++) {
-                  # print $gamesSchedule[$i][0]."VS".$gamesSchedule[$i][1]."\n";
-	# }
-	
-	
+         # print $#gamesSchedule."VS".$totalCurrentGames."\n";
+
 	
 	#------Schedule----------------
 	for ($i = 0;$i<=$#gamesSchedule;$i++) {
-           my $team1 = $gamesSchedule[$i][0]; #Just doing 1 matchup to see if metrics work. Choose the first matchup and store the number into variables
+           my $team1 = $gamesSchedule[$i][0]; 
            my $team2 = $gamesSchedule[$i][1];
            #Since $team1 and $team2 are numbers that correspond to elements of the teams array, we just subtract it by 1 since elements start with 0 
            $homeTeam = $teamsGame[$team1-1][0];
@@ -178,43 +153,98 @@ use warnings;
 
 	}
 	print "---Season Scores---\n";
+	
+	my $visitorScore;
+	my $homeScore;
 	for ($i = 0;$i<=$#gamesSchedule;$i++) {
-	   my $team1 = $gamesSchedule[$i][0]; #Just doing 1 matchup to see if metrics work. Choose the first matchup and store the number into variables
+	   my $team1 = $gamesSchedule[$i][0]; #store each matchup, into two variables
            my $team2 = $gamesSchedule[$i][1];
            #Since $team1 and $team2 are numbers that correspond to elements of the teams array, we just subtract it by 1 since elements start with 0 
            $homeTeam = $teamsGame[$team1-1][0];
            $homeTeamYear = $teamsGame[$team1-1][1];
            $visitorTeam = $teamsGame[$team2-1][0];
            $visitorTeamYear = $teamsGame[$team2-1][1];
+           
            print $homeTeamYear." ".$homeTeam." - ".$gamesSchedule[$i][2]." VS ".$visitorTeamYear." ".$visitorTeam." - ".$gamesSchedule[$i][3]."\n";
+           $homeScore = $gamesSchedule[$i][2];
+           $visitorScore = $gamesSchedule[$i][3];
+           #Initilizing wins, losses,ties and points to 0
+            
+           if($homeScore>$visitorScore) {
+              #What the n is in teamsGame[][n]: if n = 2 -> wins, if n = 3 ->loss, if n = 4 ->ties, n = 5 ->points
+               $teamsGame[$team1-1][2]++;
+               $teamsGame[$team1-1][5]+=2;
+               $teamsGame[$team2-1][3]++;
+               $teamsGame[$team2-1][5]+=0;
+               
+           } elsif ($visitorScore>$homeScore) {
+               $teamsGame[$team2-1][2]++;
+               $teamsGame[$team2-1][5]+=2;
+               $teamsGame[$team1-1][3]++;
+               $teamsGame[$team1-1][5]+=0;
+              
+           } elsif($homeScore<$visitorScore) {
+               $teamsGames[$team1-1][3]++;
+               $teamsGame[$team1-1][5]+=0;
+               $teamsGame[$team2-1][2]++;
+               $teamsGame[$team2-1][5]+=2;      
+           } elsif($visitorScore<$homeScore) {
+                $teamsGames[$team2-1][3]++;
+               $teamsGame[$team2-1][5]+=0;
+               $teamsGame[$team1-1][2]++;
+               $teamsGame[$team1-1][5]+=2;      
+           } elsif ($homeScore==$visitorScore) {
+               $teamsGame[$team1-1][4]++;
+               $teamsGame[$team1-1][5]+=1;   
+               $teamsGame[$team2-1][4]++;
+               $teamsGame[$team2-1][5]+=1;   
+           } 
+	
+	
 	}
 	
 	
-	# my $team1 = $gamesSchedule[0][0]; #Just doing 1 matchup to see if metrics work. Choose the first matchup and store the number into variables
-	# my $team2 = $gamesSchedule[0][1];
-	# #Since $team1 and $team2 are numbers that correspond to elements of the teams array, we just subtract it by 1 since elements start with 0 
-	# $homeTeam = $teamsGame[$team1-1][0];
-	# $homeTeamYear = $teamsGame[$team1-1][1];
-	# $visitorTeam = $teamsGame[$team2-1][0];
-	# $visitorTeamYear = $teamsGame[$team2-1][1];
+	#----Printing Standings---------
+	print "---Printing Team Results---\n";
+	my @teamsStandings;
 	
-	# findScore($homeTeam,$homeTeamYear,$visitorTeam,$visitorTeamYear);	
+	for ($i = 0;$i<=$#teamsGame;$i++) {
+           print $teamsGame[$i][1]." ".$teamsGame[$i][0].":".$teamsGame[$i][2]." - ".$teamsGame[$i][3]." - ".$teamsGame[$i][4]." - ".$teamsGame[$i][5]."\n";        
+           
+	}
 	
-	# print "Teams Chosen\n";
-	# print "User Selected: ".$teamYear.$teamName."\n";
-	# # getGoalsOfTeams($teamName,$teamYear);
-	# for ($i = 1;$i<=$numOpponents;$i++) {
-		# print "Opponent:".$i."-".$opponents[$i-1][1].$opponents[$i-1][0]."\n";
-		# # getGoalsOfTeams($opponents[$i-1][0],$opponents[$i-1][1]);
+	
+	# print "---Printing Standings (ordered) NOT DONE---\n";
+	# my $currentRank;
+	# my $rank = 0;
+	# for ($i = 0;$i<=$#teamsGame;$i++) {
+	   # $currentRank = $teamsGame[$i][5];
+	   # for ($j = $i;$j<=$#teamsGame;$j++) {
+	      # if ($currentRank > $teamsGame[$j][5]) {
+                 # print $teamsGame[$i][1]." ".$teamsGame[$i][0].":".$teamsGame[$i][2]." - ".$teamsGame[$i][3]." - ".$teamsGame[$i][4]." - ".$teamsGame[$i][5]."\n";
+	      # }
+	     
+	   # }
+	   
 	# }
 	
+	
+	# require 'PrintingPDF.pl'; 
+	# printPDF(@teamsGames);
+	
+}
+1;
+#
+#Created by Yash Shah
+#Here I create the goal multiplier and take the base point(which is the random goal based on the goal distrubution) and then create a score;
+#
 
 sub findScore {
         use POSIX;
 	#just printing out who plays with who; Just hardcoded 1 matchup
         my ($homeTeam,$homeTeamYear,$visitorTeam,$visitorTeamYear) = @_;
-        print "Finding Scores Now\n";
-        print $homeTeamYear." ".$homeTeam." VS ".$visitorTeamYear." ".$visitorTeam."\n";
+        # print "Finding Scores Now\n";
+        # print $homeTeamYear." ".$homeTeam." VS ".$visitorTeamYear." ".$visitorTeam."\n";
         
         my @goalsHome; 
         my @goalsAway;
@@ -244,80 +274,63 @@ sub findScore {
         my $visitorScore;#Final Score
         my @finalScores;
         
-        # @goalsHome =  @{getGoalsOfTeams($homeTeam,$homeTeamYear)};
-        # @goalsAway = @{getGoalsOfTeams($visitorTeam,$visitorTeamYear)};
-        
-        # #printing out goals for home team
-        # print $homeTeamYear."-".$homeTeam." Goals\n";
-        # for (my $j = 0; $j<=$#goalsHome ;$j++) {
-               # print $goalsHome[$j]."\n";
-               # $totalHomeGoals+=$goalsHome[$j];
-        # }
-        # print $homeTeamYear."-".$homeTeam." Total Goals: ".$totalHomeGoals."\n";
-        
-        # #printing out goals for away team
-        # print $visitorTeamYear."-".$visitorTeam." Goals\n";
-        # for (my $j = 0; $j<=$#goalsAway ;$j++) {
-               # print $goalsAway[$j]."\n";
-               # $totalVisitorGoals+=$goalsAway[$j];
-        # }
-        # print $visitorTeamYear."-".$visitorTeam." Total Goals: ".$totalVisitorGoals."\n";
+        #Metrics Calculations, Look at the metrics calculations document to understand this
         
         @goalsHome = @{getGoalsForAgainst($homeTeam,$homeTeamYear)};
         @goalsAway = @{getGoalsForAgainst($visitorTeam,$visitorTeamYear)};
-        print $homeTeamYear."-".$homeTeam." Total Goals Scored For: ".$goalsHome[0]."\n";
-        print $homeTeamYear."-".$homeTeam." Total Goals Scored Against: ".$goalsHome[1]."\n";
-        print "Average Goals Scored for  in the ".$homeTeamYear." league = ".$goalsHome[2]."\n";
+        # print $homeTeamYear."-".$homeTeam." Total Goals Scored For: ".$goalsHome[0]."\n";
+        # print $homeTeamYear."-".$homeTeam." Total Goals Scored Against: ".$goalsHome[1]."\n";
+        # print "Average Goals Scored for  in the ".$homeTeamYear." league = ".$goalsHome[2]."\n";
 
-        print $visitorTeamYear."-".$visitorTeam." Total Goals Scored For: ".$goalsAway[0]."\n";
-        print $visitorTeamYear."-".$visitorTeam." Total Goals Scored Against: ".$goalsAway[1]."\n";
-        print "Average Goals Scored for in the ".$visitorTeamYear." league = ".$goalsAway[2]."\n";
+        # print $visitorTeamYear."-".$visitorTeam." Total Goals Scored For: ".$goalsAway[0]."\n";
+        # print $visitorTeamYear."-".$visitorTeam." Total Goals Scored Against: ".$goalsAway[1]."\n";
+        # print "Average Goals Scored for in the ".$visitorTeamYear." league = ".$goalsAway[2]."\n";
         
         
        $avgGoalsScoredForHome = $goalsHome[0] / $goalsHome[2];
-       print $homeTeam."Numbers\n";
-       print  $goalsHome[0]."\n";
-       print  $goalsHome[2]."\n";
-        print $avgGoalsScoredForHome."\n";
+       # print $homeTeam."Numbers\n";
+       # print  $goalsHome[0]."\n";
+       # print  $goalsHome[2]."\n";
+        # print $avgGoalsScoredForHome."\n";
        $avgGoalsScoredAgainstHome = $goalsHome[1] / $goalsHome[2];
-       print $avgGoalsScoredAgainstHome."\n";
-       print $visitorTeam."Numbers\n";
+       # print $avgGoalsScoredAgainstHome."\n";
+       # print $visitorTeam."Numbers\n";
        $avgGoalsScoredForAway = $goalsAway[0] / $goalsAway[2];
-       print  $goalsAway[0]."\n";
-       print  $goalsAway[2]."\n";
-       print $avgGoalsScoredForAway."\n";
+       # print  $goalsAway[0]."\n";
+       # print  $goalsAway[2]."\n";
+       # print $avgGoalsScoredForAway."\n";
        $avgGoalsScoredAgainstAway = $goalsAway[1] / $goalsAway[2];
-       print $avgGoalsScoredAgainstAway."\n";
+       # print $avgGoalsScoredAgainstAway."\n";
 
-        print "----METRICS----\n";
+        # print "----METRICS----\n";
         $metricGoalsForA = $avgGoalsScoredForHome / $avgGoalsScoredForAway; #its not dividing properly
-        print ($avgGoalsScoredForHome / $avgGoalsScoredForAway);
+        # print ($avgGoalsScoredForHome / $avgGoalsScoredForAway);
         $metricGoalsAgainstA = $avgGoalsScoredAgainstHome / $avgGoalsScoredAgainstAway;
         #Since the greater the metricGoalsAgainstA, the worst, so divide $metricGoalsAgainstA by 0.50
         $metricGoalsAgainstA = 0.5 / $metricGoalsAgainstA;
          
-        print "Goals Scored For A: ".$metricGoalsForA."\n";
-        print "Goals Scored Against A: ".$metricGoalsAgainstA."\n";
+        # print "Goals Scored For A: ".$metricGoalsForA."\n";
+        # print "Goals Scored Against A: ".$metricGoalsAgainstA."\n";
         
         $metricGoalsForB = $avgGoalsScoredForAway / $avgGoalsScoredForHome;
         $metricGoalsAgainstB = $avgGoalsScoredAgainstAway / $avgGoalsScoredAgainstHome;
         #Since the greater the metricGoalsAgainstA, the worst, so divide $metricGoalsAgainstA by 0.50
         $metricGoalsAgainstB = 0.50 / $metricGoalsAgainstB;
-        print "Goals Scored For B: ".$metricGoalsForB."\n";
-        print "Goals Scored Against B: ".$metricGoalsAgainstB."\n";
+        # print "Goals Scored For B: ".$metricGoalsForB."\n";
+        # print "Goals Scored Against B: ".$metricGoalsAgainstB."\n";
         
         $metricTotalA = $metricGoalsForA + $metricGoalsAgainstA;
         $metricTotalB = $metricGoalsForB + $metricGoalsAgainstB;
-        print "Total Metrics Multiplier A: ".$metricTotalA."\n";
-        print "Total Metrics Multiplier B: ".$metricTotalB."\n";
+        # print "Total Metrics Multiplier A: ".$metricTotalA."\n";
+        # print "Total Metrics Multiplier B: ".$metricTotalB."\n";
         
         $homeGoal = goalDistribution($homeTeam,$homeTeamYear);
         $visitorGoal = goalDistribution($visitorTeam,$visitorTeamYear);
         $homeScore = ceil($homeGoal *$metricTotalA);
         $visitorScore = ceil($visitorGoal * $metricTotalB);
-        print "---FINAL SCORE---\n";
-        print $homeTeamYear." ".$homeTeam." - ".$homeScore."\n";
-        print $visitorTeamYear." ".$visitorTeam." - ".$visitorScore."\n";
+        # print "---FINAL SCORE---\n";
+        # print $homeTeamYear." ".$homeTeam." - ".$homeScore."\n";
+        # print $visitorTeamYear." ".$visitorTeam." - ".$visitorScore."\n";
         $finalScores[0] = $homeScore;
         $finalScores[1] = $visitorScore;
         return \@finalScores;
@@ -325,7 +338,10 @@ sub findScore {
         
         
 }
-
+#
+#Created by Yash Shah
+#This just gets the average goals in the league
+#
 sub AverageGoalsInLeague {
          my ($year) = @_;
          use Text::CSV;
@@ -335,7 +351,7 @@ sub AverageGoalsInLeague {
          my $totalTeams;
          my $AverageGoals;
          my $leagueFName = "OtherData/".$year."/teams.csv";
-         print $leagueFName."\n";
+         # print $leagueFName."\n";
 
          open my $leagueFH, '<', $leagueFName
                  or die "Unable to open leagues file: $leagueFName";     
@@ -360,7 +376,10 @@ sub AverageGoalsInLeague {
    
 }
 
-
+#
+#Created by Yash Shah
+#This just asks the user for a team when given a specific year
+#
 sub chooseTeamFromYear {
 	my ($year) = @_;
 	use Text::CSV;
@@ -371,7 +390,7 @@ sub chooseTeamFromYear {
 
 		
 	my $teamsFName   = "OtherData/".$year."/teams.csv";
-	print $teamsFName."\n";
+	# print $teamsFName."\n";
 	open my $teamsFH, '<', $teamsFName
 		or die "Unable to open teams file: $teamsFName";
 	
@@ -399,14 +418,17 @@ sub chooseTeamFromYear {
 			print "Incorrect Input"."\n";
 		}
 	} while ($userChoice < 1 || $userChoice >(@teams));
-	#print "User Selected: ".$userChoice."-".$teams[$userChoice-1]."\n";
-
+	
 	$teamChoice = $teams[$userChoice-1];
-	#print "User Selected: ".$userChoice."-".$teamChoice."\n";
+	
 
 	return $teamChoice;
 	
 }
+#
+#Created by Yash Shah
+#This just gets the goals scored for and goals against for a team
+#
 sub getGoalsForAgainst{
          my ($team, $year) = @_;
          use Text::CSV;
@@ -420,7 +442,7 @@ sub getGoalsForAgainst{
          my $i = 0;
          my $currentTeam;
          my $leagueFName = "OtherData/".$year."/teams.csv";
-         print $leagueFName."\n";
+         # print $leagueFName."\n";
 
          open my $leagueFH, '<', $leagueFName
                  or die "Unable to open leagues file: $leagueFName";     
@@ -452,66 +474,11 @@ sub getGoalsForAgainst{
    
 }
 
-sub getGoalsOfTeams {
-         my ($team, $year) = @_;
 
-         use Text::CSV;
-         my $csvLeague   = Text::CSV->new({ sep_char => ',' });
-
-         my $visitor;
-         my $home;
-         my $visitorG;
-         my $homeG;
-         my @goals;
-         my $i = 0;
-         my $leagueFName = "OtherData/".$year."/results.csv";
-         print $leagueFName."\n";
-
-         open my $leagueFH, '<', $leagueFName
-                 or die "Unable to open leagues file: $leagueFName";     
-
-         my $leagueRecord = <$leagueFH>;
-         while ( $leagueRecord = <$leagueFH> ) {
-            chomp ( $leagueRecord );
-            if ( $csvLeague->parse($leagueRecord) ) {
-               my @leagueFields = $csvLeague->fields();
-                  $visitor = $leagueFields[1];
-                  
-                  if ($team eq $visitor) {
-                     $visitorG = $leagueFields[3];
-                     #if($visitorG =~ /^[0-9,.E]+$/ ) {
-                        $goals[$i] = $visitorG;
-                        $i++;
-                     #}
-                     
-                  } 
-                  $home = $leagueFields[4];
-                  if ($team eq $home) {
-                     $homeG = $leagueFields[6];
-                     #if($homeG =~ /^[0-9,.E]+$/ ) {
-                        $goals[$i] = $homeG;
-                        $i++;
-                    # }
-                    
-                  } 
-                  
-            } else {
-               warn "Line could not be parsed: $leagueRecord\n";
-            }
-         }
-
-         close ($leagueFH);
-         return \@goals;
-
-         # #print $team." Goals \n";
-         # my $j = 0;
-         # for ($j = 0;$j<$i;$j++) {
-                 # print $goals[$j]."\n";
-         # }
-
-
-
-}
+#
+#Created by Kushal Pandya
+#This gets all goals scored by a team and then creates the roulette line distributions
+#
 sub goalDistribution {
    
    my ($team, $year) = @_;
@@ -580,9 +547,9 @@ sub goalDistribution {
    }
    
    my @sortedWheel = sort { $a <=> $b } @rWheel; #Sorting in numerical order
-   print ("Roulette Line: ");
-   print join(", ", @sortedWheel);
-   print ("\n");
+   # print ("Roulette Line: ");
+   # print join(", ", @sortedWheel);
+   # print ("\n");
    my @group = ( 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 );
    my @goalDist;
    my $range = 10;
@@ -654,17 +621,20 @@ sub goalDistribution {
    
    for ($p=0;$p<$#goalDist;$p++) 
    {      
-         print $goalDist[$p]."\t";
+         # print $goalDist[$p]."\t";
    }
-   print("\n");
-   print join(", ", @goalDist);
-   print("\n");
+   # print("\n");
+   # print join(", ", @goalDist);
+   # print("\n");
    $randGoal = getGoal(@goalDist);
    
    return $randGoal;
    
    
 }
+#
+#This functions gets a random goal based on a teams roulette line. 
+#
 sub getGoal {
    my (@goalDist) = @_;
    my $range = 100;
@@ -697,8 +667,8 @@ sub getGoal {
          last;
         }
     }
-    print $randGoal."\n";
-    print $goal."\n";
+    # print $randGoal."\n";
+    # print $goal."\n";
    
    return $goal;
    

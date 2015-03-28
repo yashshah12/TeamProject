@@ -2,17 +2,23 @@
 use strict;
 use warnings;
 
-# Created By Yash Shah
-# CIS 2250 Fantasy Game Project
-# Created Saturday March 14 2015
+
+# CIS 2250 Fantasy Game Project Winnipeg Jets
+
 
 #
-#Functions 
+#Using The Metric File
+require 'Metrics.pl';
+
 #
+#Call the first sub routine to ask what the user wants to do 
+#
+
 makeChoice();
 
 
 #
+#Created Nick and Evan
 # This function basically is the first question we ask the user, if they would like to do research or start simulation or quit
 # I made it a simple module so we can call it again if they want to repeat 
 # Choosing 1(doing research) will call anohter functon
@@ -33,20 +39,22 @@ sub makeChoice {
 		
 	} while(($userChoice!= 1) && ($userChoice!=2) && ($userChoice!=3));
 
-	print "CHOICE:".$userChoice."\n";
-
+	# print "CHOICE:".$userChoice."\n";
 	if($userChoice==1) {
 		Research();
 	} elsif($userChoice==2) {
-		print "Metrics Option Coming Soon\n";
+		startMetrics();
 		exit;
 	}elsif($userChoice==3) {
 		print "Exited Game\n";
 		exit;
 	}
+	
 
 }
+
 #
+#Created by Yash Shah
 # This function will start the dashboard, allowing user to view stats about a team for one year or multiple years
 #
 sub Research{
@@ -72,8 +80,11 @@ sub Research{
         }
 
 }
-
+#
+#Created by Yash Shah
 # Function definition to do Research on a team
+#
+
 sub ResearchSpecificYear{
 	#Start the CSV module
 	
@@ -143,6 +154,10 @@ sub ResearchSpecificYear{
 	Stats($teamChoice, $year);
 }
 
+#
+#Created by Yash Shah 
+#This gathers the ranges of the year the user wants to create files for and then plots a multiplot;
+#
 sub ResearchRangeYear{
 
 	
@@ -172,7 +187,8 @@ sub ResearchRangeYear{
         #
 	#Asking user for a year. Add error checking to this like above code. Loop until a year in the appropriate ranges is given
 	#
-               
+        
+        #Created by Nick and Evan
         while($valid == 0)
         {
 	print "What year will you like to start at (Ex. 1920 not 1920-1921)";
@@ -251,9 +267,9 @@ sub ResearchRangeYear{
 			 #Caling this function to create the first chart of goal differntial. 
 			$isSuccess = GoalDifferential($teamChoice, $currentYear);
 			if($isSuccess==1) {
-				print "Successfully created the goal differential".$currentYear."csv\n";
-				$arrayMultiPlotInfo[$j] = "DashboardGoalDifferential-".$currentYear.$teamChoice.".csv";
-				print $arrayMultiPlotInfo[$j]."\n";
+				# print "Successfully created the goal differential".$currentYear."csv\n";
+				$arrayMultiPlotInfo[$j] = "DashboardFiles/DashboardGoalDifferential-".$currentYear.$teamChoice.".csv";
+				# print $arrayMultiPlotInfo[$j]."\n";
 				$j++;
 			} else {
 				last;
@@ -271,9 +287,9 @@ sub ResearchRangeYear{
 			 #Caling this function to create the first chart of goal differntial. 
 			$isSuccess = Stats($teamChoice, $currentYear);
 			if($isSuccess==1) {
-				print "Successfully created the stats".$currentYear."csv\n";
-				$arrayMultiPlotInfo[$j] = "DashboardStats-".$currentYear.$teamChoice.".csv";
-				print $arrayMultiPlotInfo[$j]."\n";
+				# print "Successfully created the stats".$currentYear."csv\n";
+				$arrayMultiPlotInfo[$j] = "DashboardFiles/DashboardStats-".$currentYear.$teamChoice.".csv";
+				# print $arrayMultiPlotInfo[$j]."\n";
 				$j++;
 			} else {
 				last;
@@ -282,19 +298,14 @@ sub ResearchRangeYear{
 		
 		#create multi goal diff plots
 		hockeyMultiplotStats($yearStart,$currentYear,$teamChoice,@arrayMultiPlotInfo);
-		
-	
-        
-        
-        
-        
-    makeChoice();
+		#start the whole thing over again
+		makeChoice();
 }
 
-
-
-
+#
+#Created by Yash Shah
 #This function parses goal differntial for a teams games and creates a chart
+#
 sub GoalDifferential {
 	#This is how you receive parameters, 
 	my ($teamName, $year) = @_;
@@ -314,7 +325,7 @@ sub GoalDifferential {
 
 	#Creating the path name to open the results.csv for a given year in the subfolder of OtherData
 	my $leagueFName = "OtherData/".$year."/results.csv";
-	print $leagueFName."\n";
+	# print $leagueFName."\n";
 	
 	#Opening the file
 	open my $leagueFH, '<', $leagueFName
@@ -350,7 +361,7 @@ sub GoalDifferential {
 		       }
 		      $i++;
 		 }
-		 #Mathcing the home team name with the team the user selected. If its a match then parse the score
+		 #Matching the home team name with the team the user selected. If its a match then parse the score
 		 elsif($home eq $teamName){
 		    $toPlot = 1;
 		    $games[$i][0] = $home;
@@ -393,7 +404,7 @@ sub GoalDifferential {
 	#
 	
 	#Creating a name for the csv file for Goal Differential Stats
-	my $outputFName = "DashboardGoalDifferential-".$year.$teamName.".csv";
+	my $outputFName = "DashboardFiles/DashboardGoalDifferential-".$year.$teamName.".csv";
 	
 	#Opening the file handle to write 
 	open my $outputFH, '>', $outputFName;
@@ -405,12 +416,15 @@ sub GoalDifferential {
 	}
 	close($outputFH);
 	#this function will create the pdf, we are passing in the name of the csv file, the name we want for the pdf, and the title 
-	plotHockeyData($outputFName, "DashboardGoalDifferential-".$year.$teamName.".pdf", $teamName."-".$year);
-	print "Goal Differential PDF created\n";
+	plotHockeyData($outputFName, "DashboardFiles/DashboardGoalDifferential-".$year.$teamName.".pdf", $teamName."-".$year);
+	# print "Goal Differential PDF created\n";
 	return 1;
 	}
 	
+#
+#Created by Yash Shah
 #Plotting Data for Goal Differential
+#
 sub plotHockeyData {
 		
 	my ($in_filename, $out_filename,$title) = @_;
@@ -464,10 +478,8 @@ sub plotHockeyData {
 	
 }
 #
-#FIX
+#Created by Yash Shah
 #This function will parse other information of a team and will create a chart. 
-#Ask the Prof how to create a chart with only two columns. Write now,i created a third column in the csv that is used to create the chart
-#I followed the same format for the Goal Diferrential, but we dont need a third column
 #
 sub Stats {
 	#Receieve parameters
@@ -493,7 +505,7 @@ sub Stats {
 
 	#Creating the path name so we can open the teams.csv for a particular year in the subfolder, OtherData
 	my $teamsFName   = "OtherData/".$year."/teams.csv";
-	print $teamsFName."\n";
+	# print $teamsFName."\n";
 	open my $teamsFH, '<', $teamsFName
 		or die "Unable to open teams file: $teamsFName";
 		
@@ -527,8 +539,8 @@ sub Stats {
 	}
 	#writting to a file
 	#Get rid of the third column "Performance";
-	my $outputFName = "DashboardStats-".$year.$teamName.".csv";
-	print $outputFName."\n";
+	my $outputFName = "DashboardFiles/DashboardStats-".$year.$teamName.".csv";
+	# print $outputFName."\n";
 	open my $outputFH, '>', $outputFName;
 	print $outputFH "Stats".","."Result".","."Performance"."\n";
 	print $outputFH "1.Games Played".",".$gamesPlayed.","."wins"."\n";
@@ -547,7 +559,8 @@ sub Stats {
 	my $R = Statistics::R->new();
 
 	# Name the PDF output file for the plot  
-	my $Rplots_file = "DashboardStats-".$year.$teamName.".pdf";
+	
+	my $Rplots_file = "DashboardFiles/DashboardStats-".$year.$teamName.".pdf";
 
 	# Set up the PDF file for plots
 	$R->run(qq`pdf("$Rplots_file" , paper="letter")`);
@@ -577,234 +590,200 @@ sub Stats {
 	
 
 }
+#
+#Created by Yash Shah
+#This plots multiple goal differential graphs on one PDf
+#
 sub hockeyMultiplotGoalDiff {
 	my ($yearStart,$yearEnd,$teamChoice,@multiPlotInfo) = @_;
-#
-#  Use the R Perl module for the ggplot2 graphics
-#
+	#
+	#  Use the R Perl module for the ggplot2 graphics
+	#
 
-use Statistics::R;
+	use Statistics::R;
 
-#
-#  Use the multiplot R function to plot multiple plots 
-#  on one page
+	#
+	#  Use the multiplot R function to plot multiple plots 
+	#  on one page
 
-require 'multiplotR.pl';
+	require 'multiplotR.pl';
 
-#
-#  hockeyMultiplot.pl
-#  Author: Deborah Stacey
-#  Date of Last Update: Monday, February 16, 2015
-#  Synopsis: plot multiple R (ggplot2) plots on one PDF page
-#
+	 my @in_file;
 
-# my $teamName = $multiPlotInfo[$#multiPlotInfo-2];
-# my $startYear = $multiPlotInfo[$#multiPlotInfo-1];
-# my $endYear = $multiPlotInfo[$#multiPlotInfo];
+	my $k = 0;
+	# print "".($#multiPlotInfo)."\n";
+	my $count;
+	for ($k = 0;$k<=$#multiPlotInfo;$k++) {
+		$in_file[$k]= $multiPlotInfo[$k];
+		
+	}	
+	$count = $k;
+	# print $count."\n";
 
-# print $teamName;
-# print $startYear;
-# print $endYear;
-#this works
- my @in_file;
-# $in_file[0] = $multiPlotInfo[0];
-# $in_file[1] = $multiPlotInfo[1];
-# $in_file[2] = $multiPlotInfo[2];
-# $in_file[3] = $multiPlotInfo[3];
-# my $count = 4;
-#
-my $k = 0;
-print "".($#multiPlotInfo)."\n";
-my $count;
-for ($k = 0;$k<=$#multiPlotInfo;$k++) {
-	$in_file[$k]= $multiPlotInfo[$k];
-	
-}	
-$count = $k;
-print $count."\n";
+	# my $count = $#multiPlotInfo - 3;
+	# for ( my $i=0; $i<$count; $i++ ) {
+	   # $in_file[$i]  = $multiPlotInfo[$i];
+	# }
+	my $out_file  = "MultiGoalDifferential ".$teamChoice.$yearStart."-".$yearEnd.".pdf";
+	my $cols      = 2;
 
-# my $count = $#multiPlotInfo - 3;
-# for ( my $i=0; $i<$count; $i++ ) {
-   # $in_file[$i]  = $multiPlotInfo[$i];
-# }
-my $out_file  = "MultiGoalDifferential ".$teamChoice.$yearStart."-".$yearEnd.".pdf";
-my $cols      = 2;
+	my $title = "";
 
-my $title = "";
+	# Create a communication bridge with R and start R
+	my $R = Statistics::R->new();
 
-# Create a communication bridge with R and start R
-my $R = Statistics::R->new();
+	# Name the PDF output file for the plot  
+	my $Rplots_file = $out_file;
 
-# Name the PDF output file for the plot  
-my $Rplots_file = $out_file;
+	# Set up the PDF file for plots
+	$R->run(qq`pdf("$Rplots_file" , paper="letter")`);
 
-# Set up the PDF file for plots
-$R->run(qq`pdf("$Rplots_file" , paper="letter")`);
+	# Load the plotting library
+	$R->run(q`library(ggplot2)`);
 
-# Load the plotting library
-$R->run(q`library(ggplot2)`);
+	#
+	# Include the multiplotR definition
+	#
+	$R = multiplotR($R);
+	my $string = "multiplot(";
+	my $j = 0;
 
-#
-# Include the multiplotR definition
-#
-$R = multiplotR($R);
-my $string = "multiplot(";
-my $j = 0;
+	my $size  = 15 - (($cols-1) * 5);
 
-my $size  = 15 - (($cols-1) * 5);
+	for ( my $i=1; $i<=$count; $i++ ) {
+	#
+	#  Create plot
+	#
+	   $j = $i - 1;
+	   $R->run(qq`data <- read.csv("$in_file[$j]")`);
+	   $title = "$in_file[$j]";
 
-for ( my $i=1; $i<=$count; $i++ ) {
-#
-#  Create plot
-#
-   $j = $i - 1;
-   $R->run(qq`data <- read.csv("$in_file[$j]")`);
-   $title = "$in_file[$j]";
+	   $R->run(qq`p$i <- ggplot(data, aes(x=Game, y=Differential)) + 
+	   geom_bar(aes(fill=Performance),stat="identity",binwidth=2) + 
+	   ggtitle("$title") + ylab("Goal Differential") + xlab("Games") + 
 
-   $R->run(qq`p$i <- ggplot(data, aes(x=Game, y=Differential)) + 
-   geom_bar(aes(fill=Performance),stat="identity",binwidth=2) + 
-   ggtitle("$title") + ylab("Goal Differential") + xlab("Games") + 
+	   theme(axis.title.x=element_text(size=$size)) +
+	   theme(axis.title.y=element_text(size=$size)) +
+	   theme(plot.title  =element_text(face="bold",size=$size)) + 
 
-   theme(axis.title.x=element_text(size=$size)) +
-   theme(axis.title.y=element_text(size=$size)) +
-   theme(plot.title  =element_text(face="bold",size=$size)) + 
+	   scale_fill_manual(values=c("red", "blue")) + 
 
-   scale_fill_manual(values=c("red", "blue")) + 
+	   theme(legend.position="none") +
 
-   theme(legend.position="none") +
+	   theme(axis.text.x=element_text(angle=50, size=10, vjust=0.5)) `);
 
-   theme(axis.text.x=element_text(angle=50, size=10, vjust=0.5)) `);
+	   $string = $string."p".$i.",";
+	}
 
-   $string = $string."p".$i.",";
+	$string = $string."cols=".$cols.")";
+	# print "string = ".$string."and size = ".$size."\n";
+
+	$R->run(qq`$string`);
+
+	# Close down the PDF device
+	$R->run(q`dev.off()`);
+
+	$R->stop();
+
+	#
+	#  End of the script
+	#
 }
-
-$string = $string."cols=".$cols.")";
-print "string = ".$string."and size = ".$size."\n";
-
-$R->run(qq`$string`);
-
-# Close down the PDF device
-$R->run(q`dev.off()`);
-
-$R->stop();
-
 #
-#  End of the script
+#Creating the multiple stats graphs on one page
 #
-}
-
 sub hockeyMultiplotStats {
 	my ($yearStart,$yearEnd,$teamChoice,@multiPlotInfo) = @_;
-#
-#  Use the R Perl module for the ggplot2 graphics
-#
+	#
+	#  Use the R Perl module for the ggplot2 graphics
+	#
 
-use Statistics::R;
+	use Statistics::R;
 
-#
-#  Use the multiplot R function to plot multiple plots 
-#  on one page
+	#
+	#  Use the multiplot R function to plot multiple plots 
+	#  on one page
 
-require 'multiplotR.pl';
+	require 'multiplotR.pl';
 
-#
-#  hockeyMultiplot.pl
-#  Author: Deborah Stacey
-#  Date of Last Update: Monday, February 16, 2015
-#  Synopsis: plot multiple R (ggplot2) plots on one PDF page
-#
-
-# my $teamName = $multiPlotInfo[$#multiPlotInfo-2];
-# my $startYear = $multiPlotInfo[$#multiPlotInfo-1];
-# my $endYear = $multiPlotInfo[$#multiPlotInfo];
-
-# print $teamName;
-# print $startYear;
-# print $endYear;
-#this works
- my @in_file;
-# $in_file[0] = $multiPlotInfo[0];
-# $in_file[1] = $multiPlotInfo[1];
-# $in_file[2] = $multiPlotInfo[2];
-# $in_file[3] = $multiPlotInfo[3];
-# my $count = 4;
-#
-my $k = 0;
-print "".($#multiPlotInfo)."\n";
-my $count;
-for ($k = 0;$k<=$#multiPlotInfo;$k++) {
-	$in_file[$k]= $multiPlotInfo[$k];
+	 my @in_file;
 	
-}	
-$count = $k;
-print $count."\n";
+	my $k = 0;
+	# print "".($#multiPlotInfo)."\n";
+	my $count;
+	for ($k = 0;$k<=$#multiPlotInfo;$k++) {
+		$in_file[$k]= $multiPlotInfo[$k];
+		
+	}	
+	$count = $k;
+	# print $count."\n";
 
-# my $count = $#multiPlotInfo - 3;
-# for ( my $i=0; $i<$count; $i++ ) {
-   # $in_file[$i]  = $multiPlotInfo[$i];
-# }
-my $out_file  = "MultiStats ".$teamChoice.$yearStart."-".$yearEnd.".pdf";
-my $cols      = 1;
+	# my $count = $#multiPlotInfo - 3;
+	# for ( my $i=0; $i<$count; $i++ ) {
+	   # $in_file[$i]  = $multiPlotInfo[$i];
+	# }
+	my $out_file  = "MultiStats ".$teamChoice.$yearStart."-".$yearEnd.".pdf";
+	my $cols      = 1;
 
-my $title = "";
+	my $title = "";
 
-# Create a communication bridge with R and start R
-my $R = Statistics::R->new();
+	# Create a communication bridge with R and start R
+	my $R = Statistics::R->new();
 
-# Name the PDF output file for the plot  
-my $Rplots_file = $out_file;
+	# Name the PDF output file for the plot  
+	my $Rplots_file = $out_file;
 
-# Set up the PDF file for plots
-$R->run(qq`pdf("$Rplots_file" , paper="letter")`);
+	# Set up the PDF file for plots
+	$R->run(qq`pdf("$Rplots_file" , paper="letter")`);
 
-# Load the plotting library
-$R->run(q`library(ggplot2)`);
+	# Load the plotting library
+	$R->run(q`library(ggplot2)`);
 
-#
-# Include the multiplotR definition
-#
-$R = multiplotR($R);
-my $string = "multiplot(";
-my $j = 0;
+	#
+	# Include the multiplotR definition
+	#
+	$R = multiplotR($R);
+	my $string = "multiplot(";
+	my $j = 0;
 
-my $size  = 15 - (($cols-1) * 5);
+	my $size  = 15 - (($cols-1) * 5);
 
-for ( my $i=1; $i<=$count; $i++ ) {
-#
-#  Create plot
-#
-   $j = $i - 1;
-   $R->run(qq`data <- read.csv("$in_file[$j]")`);
-   $title = "$in_file[$j]";
+	for ( my $i=1; $i<=$count; $i++ ) {
+	#
+	#  Create plot
+	#
+	   $j = $i - 1;
+	   $R->run(qq`data <- read.csv("$in_file[$j]")`);
+	   $title = "$in_file[$j]";
 
-   $R->run(qq`p$i <- ggplot(data, aes(x=Stats, y=Result)) + 
-   geom_bar(aes(fill=Performance),stat="identity",binwidth=2) + 
-   ggtitle("$title") + ylab("Results") + xlab("Statistics") + 
+	   $R->run(qq`p$i <- ggplot(data, aes(x=Stats, y=Result)) + 
+	   geom_bar(aes(fill=Performance),stat="identity",binwidth=2) + 
+	   ggtitle("$title") + ylab("Results") + xlab("Statistics") + 
 
-   theme(axis.title.x=element_text(size=$size)) +
-   theme(axis.title.y=element_text(size=$size)) +
-   theme(plot.title  =element_text(face="bold",size=$size)) + 
+	   theme(axis.title.x=element_text(size=$size)) +
+	   theme(axis.title.y=element_text(size=$size)) +
+	   theme(plot.title  =element_text(face="bold",size=$size)) + 
 
-   scale_fill_manual(values=c("red", "blue")) + 
+	   scale_fill_manual(values=c("red", "blue")) + 
 
-   theme(legend.position="none") +
+	   theme(legend.position="none") +
 
-   theme(axis.text.x=element_text(angle=50, size=10, vjust=0.5)) `);
+	   theme(axis.text.x=element_text(angle=50, size=10, vjust=0.5)) `);
 
-   $string = $string."p".$i.",";
-}
+	   $string = $string."p".$i.",";
+	}
 
-$string = $string."cols=".$cols.")";
-print "string = ".$string."and size = ".$size."\n";
+	$string = $string."cols=".$cols.")";
+	# print "string = ".$string."and size = ".$size."\n";
 
-$R->run(qq`$string`);
+	$R->run(qq`$string`);
 
-# Close down the PDF device
-$R->run(q`dev.off()`);
+	# Close down the PDF device
+	$R->run(q`dev.off()`);
 
-$R->stop();
+	$R->stop();
 
-#
-#  End of the script
-#
+	#
+	#  End of the script
+	#
 }
