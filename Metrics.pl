@@ -5,6 +5,7 @@ return true;
 #Created by Yash Shah
 #This is the File for Let Play Part
 #
+require 'DashboardMulti.pl';
 sub startMetrics{ 
 	use Text::CSV;
 	my $csvTeams   = Text::CSV->new({ sep_char => ',' });
@@ -212,11 +213,17 @@ sub startMetrics{
 	print "Team:wins - losses - ties - points\n";
 	my @teamsStandings;
 	
+	# for ($i = 0;$i<=$#teamsGame;$i++) {
+           # print $teamsGame[$i][1]." ".$teamsGame[$i][0].":".$teamsGame[$i][2]." - ".$teamsGame[$i][3]." - ".$teamsGame[$i][4]." - ".$teamsGame[$i][5]."\n";        
+           
+	# }
+	# print "---Printing Team Results In Order---\n";
+	@teamsGame = sort { $b->[5] cmp $a->[5]   } @teamsGame;
+
 	for ($i = 0;$i<=$#teamsGame;$i++) {
            print $teamsGame[$i][1]." ".$teamsGame[$i][0].":".$teamsGame[$i][2]." - ".$teamsGame[$i][3]." - ".$teamsGame[$i][4]." - ".$teamsGame[$i][5]."\n";        
            
 	}
-	
 	
 	# print "---Printing Standings (ordered) NOT DONE---\n";
 	# my $currentRank;
@@ -236,6 +243,9 @@ sub startMetrics{
 	# require 'PrintingPDF.pl'; 
 	# printPDF(@teamsGames);
 	
+	
+	
+	makeChoice();
 }
 1;
 #

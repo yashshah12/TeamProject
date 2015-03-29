@@ -30,7 +30,7 @@ sub makeChoice {
 	my $userChoice = 0;
 	#Keep asking until an appropriate answer is achieved
 	do {
-		print "Will you like to do research (1) or go ahead and choose a team(2) or quit(3)";
+		print "Will you like to start Dashboard(1) or Lets Play(2) or quit(3)";
 		chomp ($userChoice = <>);
 			
 		if($userChoice !=1 && $userChoice !=2 && $userChoice!=3) {
@@ -52,6 +52,7 @@ sub makeChoice {
 	
 
 }
+1;
 
 #
 #Created by Yash Shah
