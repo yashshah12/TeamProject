@@ -39,9 +39,10 @@ sub startMetrics{
 	$teamsGame[0][1] = $teamYear;
 	$numTeams = 1;
 	# print "User Selected: ".$teamsGame[0][1]."-".$teamsGame[0][0]."\n";
-	
-	print "How many teams do you want to face again\n";
-	chomp ($numOpponents = <>);
+	do {
+            print "How many teams do you want to face again\n";
+            chomp ($numOpponents = <>);
+	}while($numOpponents<2);
 	$numTeams+=$numOpponents;
 	print $numOpponents."\n";
 	for ($i = 1;$i<=$numOpponents;$i++) {
@@ -58,8 +59,10 @@ sub startMetrics{
         for ($i = 1; $i<=$#teamsGame;$i++) {
         	print "Opponent ".$i.":".$teamsGame[$i][1]."-".$teamsGame[$i][0]."\n";
 	}
-	print "How many games do you want to play:\n";
-	chomp ($gamesToPlay = <>);
+	do {
+         print "How many games do you want to play:\n";
+         chomp ($gamesToPlay = <>);
+        } while($gamesToPlay < 1);
 	print "Games In Season: ".$gamesToPlay."\n";
         # print "Total teams: ".$numTeams."\n"; #Total teams in the fantasy league
 	
@@ -646,7 +649,7 @@ sub goalDistribution {
    
    
 }
-#
+#Created by Kushal Pandya
 #This functions gets a random goal based on a teams roulette line. 
 #
 sub getGoal {
